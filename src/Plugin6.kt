@@ -1,6 +1,6 @@
-public class Plugin6: IPlugin {
-    public override fun load() {
-        PluginTest.setTestVar(true)
+class Plugin6: IPlugin {
+    override fun load() {
+        setTestVar(true)
         println("${javaClass.name} loaded successfully")
     }
 

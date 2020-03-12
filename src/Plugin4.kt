@@ -1,5 +1,5 @@
-public class Plugin4: IPlugin{
-    public override fun load() {
+class Plugin4: IPlugin{
+    override fun load() {
         println("${javaClass.name} loaded successfully")
     }
 }
