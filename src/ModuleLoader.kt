@@ -27,9 +27,7 @@ class ModuleLoader(private val pathtobin: String, parent: ClassLoader?): ClassLo
         val length = File(path).length()
         if (length > Int.MAX_VALUE)
         {
-            /**
-             * File is too large
-             */
+            // If file is too large
         }
         /**
          * Create the byte array to hold the data

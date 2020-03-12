@@ -1,5 +1,6 @@
 import java.io.File
 import java.io.FileFilter
+import java.io.FileNotFoundException
 import java.io.IOException
 
 object ModuleEngine {
@@ -12,26 +13,24 @@ object ModuleEngine {
          */
         val loader = ModuleLoader(modulePath, ClassLoader.getSystemClassLoader())
         /**
-         * Get a array of available modules
+         * Get an array of available modules from path via mask filter
          */
         val dir = File(modulePath)
         val files = dir.listFiles(FileFilter{maskFilter(it, "class")})
         val modules = mutableListOf<File>()
-
-        for (file in files) {
-            modules.add(file)
-        }
+        /**
+         * Transport modules form an array to a list
+         */
+        arrayToList(files, modules)
         /**
          * Load and execute each module
          */
         moduleListLoad(modules, loader)
     }
 
-    @Throws(IOException::class)
-    fun maskFilter(file: File, mask: String): Boolean {
-        return file.isFile && file.name.endsWith(".$mask")
-    }
-
+    /**
+     * Method to load all modules from list
+     */
     @Throws(IOException::class)
     fun moduleListLoad(modules: List<File>, loader: ModuleLoader) {
         val tempList = mutableListOf<File>()
@@ -42,6 +41,7 @@ object ModuleEngine {
                 val plugin: IPlugin = clazz.newInstance() as IPlugin
                 plugin.load()
             } catch (ex: Exception) {
+                // TODO: change catcher, not proper exceptions
                 when (ex) {
                     is ClassNotFoundException,
                     is InstantiationException,
@@ -54,5 +54,23 @@ object ModuleEngine {
         if (tempList.isNotEmpty() && tempList != modules) {
             moduleListLoad(tempList, loader)
         }
+    }
+
+    /**
+     * Helper methods
+     */
+    @Throws(IOException::class)
+    fun arrayToList(array: Array<File>?, list: MutableList<File>) {
+        if (array == null) {
+            return
+        }
+        for (el in array) {
+            list.add(el)
+        }
+    }
+
+    @Throws(IOException::class)
+    fun maskFilter(file: File, mask: String): Boolean {
+        return file.isFile && file.name.endsWith(".$mask")
     }
 }
