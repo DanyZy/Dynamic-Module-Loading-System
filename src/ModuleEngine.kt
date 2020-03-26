@@ -7,7 +7,7 @@ object ModuleEngine {
     @JvmStatic
     fun main(args: Array<String>) {
         // Test path, change later
-        val modulePath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\"
+        val modulePath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\failedTest\\out\\production\\failedTest\\"
         /**
          * Create a module loader
          */
@@ -26,6 +26,8 @@ object ModuleEngine {
          * Load and execute each module
          */
         moduleListLoad(modules, loader)
+
+        JarLoadTest(loader)
     }
 
     /**
@@ -54,6 +56,13 @@ object ModuleEngine {
         if (tempList.isNotEmpty() && tempList != modules) {
             moduleListLoad(tempList, loader)
         }
+    }
+
+    fun JarLoadTest(loader: ModuleLoader) {
+        val path = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\artifacts\\dependencyTest_jar\\dependencyTest.jar\\"
+        val dll = DynamicLibLoader(path, loader)
+        println(dll.getMainClassName())
+        dll.invokeClass(dll.getMainClassName(), arrayOf(null))
     }
 
     /**
