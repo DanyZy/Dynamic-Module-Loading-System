@@ -1,23 +1,28 @@
 import java.io.File
 import java.io.FileFilter
-import java.io.FileNotFoundException
-import java.io.IOException
+import java.util.jar.JarEntry
 
 object ModuleEngine {
     @JvmStatic
     fun main(args: Array<String>) {
         // Test path, change later
-        val modulePath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\failedTest\\out\\production\\failedTest\\"
+        val modulePath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\"
+        val modulePath2 = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin4.class"
+        val dllPath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\jarTest\\out\\artifacts\\jarTest_jar\\jarTest.jar"
         /**
          * Create a module loader
          */
-        val loader = ModuleLoader(modulePath, ClassLoader.getSystemClassLoader())
+        val moduleLoader = ModuleLoader(modulePath, parent = ClassLoader.getSystemClassLoader())
+        val moduleLoader2 = ModuleLoader(data = Connect.getPluginByName("Plugin1"),
+            parent = ClassLoader.getSystemClassLoader())
         /**
          * Get an array of available modules from path via mask filter
          */
         val dir = File(modulePath)
+        val dir2 = File(modulePath2)
         val files = dir.listFiles(FileFilter{maskFilter(it, "class")})
         val modules = mutableListOf<File>()
+        val modules2 = mutableListOf<File>(dir2)
         /**
          * Transport modules form an array to a list
          */
@@ -25,15 +30,15 @@ object ModuleEngine {
         /**
          * Load and execute each module
          */
-        moduleListLoad(modules, loader)
+        moduleListLoad(modules, moduleLoader)
+        moduleListLoad(modules2, moduleLoader2)
 
-        JarLoadTest(loader)
+        jarLoadTest(dllPath)
     }
 
     /**
      * Method to load all modules from list
      */
-    @Throws(IOException::class)
     fun moduleListLoad(modules: List<File>, loader: ModuleLoader) {
         val tempList = mutableListOf<File>()
         for (module in modules) {
@@ -43,10 +48,7 @@ object ModuleEngine {
                 val plugin: IPlugin = clazz.newInstance() as IPlugin
                 plugin.load()
             } catch (ex: Exception) {
-                // TODO: change catcher, not proper exceptions
                 when (ex) {
-                    is ClassNotFoundException,
-                    is InstantiationException,
                     is IllegalAccessException -> {
                         ex.printStackTrace()
                     } else -> tempList.add(module)
@@ -58,27 +60,23 @@ object ModuleEngine {
         }
     }
 
-    fun JarLoadTest(loader: ModuleLoader) {
-        val path = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\artifacts\\dependencyTest_jar\\dependencyTest.jar\\"
-        val dll = DynamicLibLoader(path, loader)
-        println(dll.getMainClassName())
-        dll.invokeClass(dll.getMainClassName(), arrayOf(null))
+    // Test func, change later
+    fun jarLoadTest(pathtobin: String) {
+        val dll = ModuleFetcher(pathtobin)
+        println(dll.fetchMainClassName())
+        dll.fetchMainClass(dll.fetchMainClassName(), arrayOf("It ", "works", "!"))?.invoke(null, arrayOf("It ", "works", "!"))
     }
 
     /**
      * Helper methods
      */
-    @Throws(IOException::class)
     fun arrayToList(array: Array<File>?, list: MutableList<File>) {
-        if (array == null) {
-            return
-        }
+        if (array == null) return
         for (el in array) {
             list.add(el)
         }
     }
 
-    @Throws(IOException::class)
     fun maskFilter(file: File, mask: String): Boolean {
         return file.isFile && file.name.endsWith(".$mask")
     }
