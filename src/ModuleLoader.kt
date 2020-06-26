@@ -9,7 +9,7 @@ class ModuleLoader(private val pathtobin: String = "",
             if (data != null) {
                 defineClass(className, data, 0, data.size)
             } else {
-                val bytes = ModuleFetcher(pathtobin).fetchClassBytes("$pathtobin$className.class")
+                val bytes = fetchClassBytes("$pathtobin$className.class")
                 defineClass(className, bytes, 0, bytes.size)
             }
         } catch (ex: Exception) {

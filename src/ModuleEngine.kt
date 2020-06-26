@@ -1,20 +1,19 @@
 import java.io.File
 import java.io.FileFilter
-import java.util.jar.JarEntry
 
 object ModuleEngine {
     @JvmStatic
     fun main(args: Array<String>) {
         // Test path, change later
-        val modulePath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\"
+        val modulePath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest"
         val modulePath2 = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin4.class"
         val dllPath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\jarTest\\out\\artifacts\\jarTest_jar\\jarTest.jar"
         /**
          * Create a module loader
          */
         val moduleLoader = ModuleLoader(modulePath, parent = ClassLoader.getSystemClassLoader())
-        val moduleLoader2 = ModuleLoader(data = Connect.getPluginByName("Plugin1"),
-            parent = ClassLoader.getSystemClassLoader())
+        //val moduleLoader2 = ModuleLoader(data = DatabaseManager.getPluginByName("Plugin1"),
+        //    parent = ClassLoader.getSystemClassLoader())
         /**
          * Get an array of available modules from path via mask filter
          */
@@ -31,9 +30,7 @@ object ModuleEngine {
          * Load and execute each module
          */
         moduleListLoad(modules, moduleLoader)
-        moduleListLoad(modules2, moduleLoader2)
-
-        jarLoadTest(dllPath)
+        //moduleListLoad(modules2, moduleLoader2)
     }
 
     /**
@@ -49,7 +46,8 @@ object ModuleEngine {
                 plugin.load()
             } catch (ex: Exception) {
                 when (ex) {
-                    is IllegalAccessException -> {
+                    is IllegalAccessException,
+                    is ClassNotFoundException -> {
                         ex.printStackTrace()
                     } else -> tempList.add(module)
                 }
@@ -58,13 +56,6 @@ object ModuleEngine {
         if (tempList.isNotEmpty() && tempList != modules) {
             moduleListLoad(tempList, loader)
         }
-    }
-
-    // Test func, change later
-    fun jarLoadTest(pathtobin: String) {
-        val dll = ModuleFetcher(pathtobin)
-        println(dll.fetchMainClassName())
-        dll.fetchMainClass(dll.fetchMainClassName(), arrayOf("It ", "works", "!"))?.invoke(null, arrayOf("It ", "works", "!"))
     }
 
     /**
