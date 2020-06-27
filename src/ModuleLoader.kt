@@ -1,7 +1,9 @@
 import java.io.*
 
-class ModuleLoader(private val pathtobin: String = "",
-                   private val data: ByteArray? = null, parent: ClassLoader?): ClassLoader(parent) {
+class ModuleLoader(
+    private val pathtobin: String = "",
+    private val data: ByteArray? = null
+    ): ClassLoader(getSystemClassLoader()) {
 
     @Throws(ClassNotFoundException::class)
     public override fun findClass(className: String): Class<*> {

@@ -11,23 +11,23 @@ import java.util.jar.JarEntry
 import java.util.jar.JarFile
 
 
-public fun fetchPluginsFromJar(pathtobin: String): List<JarEntry?> {
+public fun fetchPluginsFromJar(pathtobin: String): List<File?> {
     val jar: JarFile = JarFile(pathtobin)
     val entries: Enumeration<JarEntry> = jar.entries()
-    val plugins: MutableList<JarEntry?> = mutableListOf()
+    val plugins: MutableList<File?> = mutableListOf()
     return try {
         while (entries.hasMoreElements()) {
             val entry: JarEntry = entries.nextElement()
             if (entry.isDirectory || !entry.name.endsWith(".class")) continue
             try {
-                plugins.add(entry)
+                plugins.add(entry as File)
             } catch (e: Exception) {
                 continue
             }
         }
         plugins
     } catch (ex: Exception) {
-        emptyList<JarEntry>()
+        emptyList<File>()
     }
 }
 

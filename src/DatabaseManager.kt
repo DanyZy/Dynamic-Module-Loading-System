@@ -55,6 +55,12 @@ class DatabaseManager(private val connection: Connection?) {
 fun main(args: Array<String>) {
     val dbc = DatabaseConnection("jdbc:sqlite:C:\\Users\\Daniil\\sqlite\\db\\plugins.db")
     val dbm = DatabaseManager(dbc.conn)
-    dbm.insert("Plugin7", fetchClassBytes("C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin4.class"))
+    dbm.insert("Plugin1", fetchClassBytes("C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin1.class"))
+    dbm.insert("Plugin2", fetchClassBytes("C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin2.class"))
+    dbm.insert("Plugin3", fetchClassBytes("C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin3.class"))
+    dbm.insert("Plugin4", fetchClassBytes("C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin4.class"))
+    dbm.insert("Plugin5", fetchClassBytes("C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin5.class"))
+    dbm.insert("Plugin6", fetchClassBytes("C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin6.class"))
+
     println(dbm.getPlugin())
 }
