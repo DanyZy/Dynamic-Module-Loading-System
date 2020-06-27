@@ -31,9 +31,8 @@ public fun fetchPluginsFromJar(pathtobin: String): List<JarEntry?> {
     }
 }
 
-@Throws(ClassNotFoundException::class, NoSuchMethodException::class,
-    InvocationTargetException::class)
-public fun fetchMainClass(name: String?, args: Array<String?>, pathtobin: String): Method? {
+@Throws(ClassNotFoundException::class, NoSuchMethodException::class, InvocationTargetException::class)
+public fun fetchMainClass(pathtobin: String, name: String?, args: Array<String?>): Method? {
     return try {
         val url: URL = URL("jar", "", -1, "file:$pathtobin!/")
         val c: Class<*> = URLClassLoader(arrayOf(url)).loadClass(name)
@@ -68,9 +67,6 @@ public fun fetchClassBytes(path: String): ByteArray {
      * Get the size of the file
      */
     val length = File(path).length()
-    if (length > Int.MAX_VALUE) {
-        // TODO: logic If file is too large
-    }
     /**
      * Create the byte array to hold the data
      */

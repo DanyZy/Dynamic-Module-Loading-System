@@ -1,19 +1,20 @@
 import java.io.File
 import java.io.FileFilter
+import java.util.jar.JarEntry
 
 object ModuleEngine {
     @JvmStatic
     fun main(args: Array<String>) {
         // Test path, change later
-        val modulePath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest"
+        val modulePath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\"
         val modulePath2 = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\dependencyTest\\out\\production\\dependencyTest\\Plugin4.class"
         val dllPath = "C:\\Users\\Daniil\\IdeaProjects\\Construction_materials\\jarTest\\out\\artifacts\\jarTest_jar\\jarTest.jar"
         /**
          * Create a module loader
          */
         val moduleLoader = ModuleLoader(modulePath, parent = ClassLoader.getSystemClassLoader())
-        //val moduleLoader2 = ModuleLoader(data = DatabaseManager.getPluginByName("Plugin1"),
-        //    parent = ClassLoader.getSystemClassLoader())
+        //val moduleLoader2 = ModuleLoader(data = Connect.getPluginByName("Plugin1"),
+        //   parent = ClassLoader.getSystemClassLoader())
         /**
          * Get an array of available modules from path via mask filter
          */
@@ -46,8 +47,7 @@ object ModuleEngine {
                 plugin.load()
             } catch (ex: Exception) {
                 when (ex) {
-                    is IllegalAccessException,
-                    is ClassNotFoundException -> {
+                    is IllegalAccessException -> {
                         ex.printStackTrace()
                     } else -> tempList.add(module)
                 }
